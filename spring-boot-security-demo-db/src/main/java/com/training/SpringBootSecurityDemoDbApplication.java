@@ -20,12 +20,11 @@ public class SpringBootSecurityDemoDbApplication implements CommandLineRunner{
 	@Autowired
 	private UserRepo userRepo;
 	
-	@PostConstruct
-	public void init()
-	{
-		userRepo.save(new MyUser("user1", "user1", "USER_ROLE"));
-		userRepo.save(new MyUser("admin", "admin123", "ADMIN_ROLE"));
-	}
+	/*
+	 * @PostConstruct public void init() { userRepo.save(new MyUser("user1",
+	 * "user1", "ROLE_USER")); userRepo.save(new MyUser("admin", "admin123",
+	 * "ROLE_ADMIN")); }
+	 */
 
 	@Override
 	public void run(String... args) throws Exception {
