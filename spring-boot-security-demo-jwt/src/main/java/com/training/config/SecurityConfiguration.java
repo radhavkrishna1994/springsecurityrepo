@@ -3,7 +3,9 @@ package com.training.config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -50,19 +52,30 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		return encoder;
 	}
 
-	//authorization
 	public void configure(HttpSecurity http) throws Exception
 	{
-		log.info("I am in Authorization");
+		log.info("In Authorization....");
+		
 		http
+		.csrf().disable()
 		.authorizeRequests()
+		.antMatchers("/authenticate")
+		.permitAll()
+		.antMatchers("/user/**")
+		//.hasRole("USER")
+		.hasAnyRole("USER","ADMIN")
 		.antMatchers("/admin/**")
 		.hasRole("ADMIN")
-		.antMatchers("/user/**")
-		.hasRole("USER")
-		.and()
-		.formLogin();
+		.anyRequest().authenticated();
 		
+		//http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+	}
+	
+	
+	@Bean
+	public AuthenticationManager getAuthManager() throws Exception
+	{
+		return super.authenticationManager();
 	}
 	
 	
