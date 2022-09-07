@@ -10,7 +10,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.training.filters.JwtFilter;
 import com.training.services.MyUserDetailsService;
 
 @Configuration
@@ -52,6 +54,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		return encoder;
 	}
 
+	@Autowired
+	private JwtFilter jwtFilter;
+	
 	public void configure(HttpSecurity http) throws Exception
 	{
 		log.info("In Authorization....");
@@ -68,7 +73,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		.hasRole("ADMIN")
 		.anyRequest().authenticated();
 		
-		//http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 	
 	
